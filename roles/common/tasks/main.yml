@@ -1,0 +1,40 @@
+---
+- name: Install libselinux-python
+  yum: name=libselinux-python state=present
+
+- name: Copy the EPEL repository definition
+  copy: src=epel.repo dest=/etc/yum.repos.d/epel.repo
+
+- name: Create the GPG key for EPEL
+  copy: src=RPM-GPG-KEY-EPEL-7 dest=/etc/pki/rpm-gpg
+
+- name: get epel-repo rpm RHEL7
+  get_url: dest=/tmp/epel-release.rpm  url=https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+
+- name: get remi-repo rpm RHEL7
+  get_url: dest=/tmp/remi-release.rpm  url=http://rpms.famillecollet.com/enterprise/remi-release-7.rpm
+
+- name: Install epel-repo
+  yum: pkg=/tmp/epel-release.rpm state=installed
+
+- name: Install remi-repo
+  yum: pkg=/tmp/remi-release.rpm state=installed
+
+- name: Disable FirewallD
+  command: /usr/bin/systemctl disable firewalld
+
+- name: Install iptables
+  yum: name=iptables-services state=present
+
+- name: Enable iptables
+  command: /usr/bin/systemctl enable iptables
+
+- name: Set up iptables rules
+  copy: src=iptables-save dest=/etc/sysconfig/iptables
+  notify: restart iptables
+
+- name: Install wget
+  yum: name=wget state=present
+
+- name: Install gcc
+  yum: name=gcc state=present

@@ -1,0 +1,31 @@
+---
+- name: Install MariaDB
+  yum: name={{ item }} state=present
+  with_items:
+  - mariadb
+  - mariadb-server
+  - mariadb-libs
+  - mariadb-devel
+  - MySQL-python
+  - libselinux-python
+  - libsemanage-python
+- name: Create MariaDB config file
+  template: src=my.cnf.j2 dest=/etc/my.cnf
+- name: Start the MariaDB service
+  service: name=mariadb state=started enabled=true
+- name: Update mysql root password for all root accounts
+  mysql_user: name=root host={{ item }} password={{ mariadb_root_pass }}
+  with_items:   
+   - 127.0.0.1
+   - ::1
+   - localhost
+- name: Create MariaDB configuration file
+  template: src=my-root.cnf.j2 dest=~/.my.cnf
+- name: Remove anonymous users
+  mysql_user: name='' host={{ item }} state=absent
+  with_items:
+   - localhost
+- name: Remove the test database
+  mysql_db: name=test state=absent
+  notify:
+  - restart mariadb

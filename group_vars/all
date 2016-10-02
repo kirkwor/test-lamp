@@ -1,0 +1,9 @@
+---
+# Username for remote box
+username: vagrant
+
+# MariaDB Random Root Password
+mariadb_root_pass: "{{ lookup('password', '/tmp/mariadbpwd length=15') }}"
+
+# Default domain
+default_domain: test.com

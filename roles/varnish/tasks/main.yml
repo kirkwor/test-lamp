@@ -1,0 +1,19 @@
+---
+- name: Update repo
+  get_url: dest=/tmp/varnish-release.rpm  url=http://repo.varnish-cache.org/redhat/varnish-4.1/el7/noarch/varnish-release/varnish-release-4.1-2.el7.noarch.rpm
+
+- name: Install Varnish rpm
+  yum: pkg=/tmp/varnish-release.rpm state=installed
+
+- name: Install Varnish
+  yum: name=varnish state=latest
+
+- name: Copy Varnish default configuration
+  template: src=default.vcl.j2 dest=/etc/varnish/default.vcl
+
+- name: Copy Varnish default params
+  template: src=varnish.params.j2 dest=/etc/varnish/varnish.params
+
+- name: Set Varnish to auto start
+  service: name=varnish state=started enabled=yes
+  notify: restart varnish

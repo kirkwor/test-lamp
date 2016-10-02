@@ -1,0 +1,166 @@
+#
+# This is an example VCL file for Varnish.
+#
+# It does not do anything by default, delegating control to the
+# builtin VCL. The builtin VCL is called when there is no explicit
+# return statement.
+#
+# See the VCL chapters in the Users Guide at https://www.varnish-cache.org/docs/
+# and https://www.varnish-cache.org/trac/wiki/VCLExamples for more examples.
+
+# Marker to tell the VCL compiler that this VCL has been adapted to the
+# new 4.0 format.
+
+vcl 4.0;
+
+backend default {
+
+    .host = "127.0.0.1";
+    .port = "8080";
+
+}
+
+acl purge {
+
+    "127.0.0.1";
+    "localhost";
+
+}
+
+sub vcl_recv {
+
+    # Never cache PUT, PATCH, DELETE or POST requests
+
+    if (req.method == "PUT" || req.method == "PATCH" || req.method == "DELETE" || req.method == "POST") {
+
+        return (pass);
+
+    }
+
+    # Never cache cart, account, checkout or addons
+
+    if (req.url ~ "^/(cart|my-account|checkout|addons)") {
+
+        return (pass);
+
+    }
+
+    # Never cache adding to cart
+
+    if ( req.url ~ "\?add-to-cart=" ) {
+
+        return (pass);
+
+    }
+
+    # Never cache admin or login
+
+    if ( req.url ~ "^/wp-(admin|login|cron)" ) {
+
+        return (pass);
+
+    }
+
+    # Never cache WooCommerce API
+
+    if ( req.url ~ "wc-api" ) {
+
+        return (pass);
+
+    }
+
+    # Remove has_js and CloudFlare/Google Analytics __* cookies and statcounter is_unique
+
+    set req.http.Cookie = regsuball(req.http.Cookie, "(^|;\s*)(_[_a-z]+|has_js|is_unique)=[^;]*", "");
+
+    # Remove a ";" prefix, if present.
+
+    set req.http.Cookie = regsub(req.http.Cookie, "^;\s*", "");
+
+    # Remove the wp-settings-1 cookie
+
+    set req.http.Cookie = regsuball(req.http.Cookie, "wp-settings-1=[^;]+(; )?", "");
+
+    # Remove the wp-settings-time-1 cookie
+
+    set req.http.Cookie = regsuball(req.http.Cookie, "wp-settings-time-1=[^;]+(; )?"
+
+            , "");
+
+    # Remove the wp test cookie
+
+    set req.http.Cookie = regsuball(req.http.Cookie, "wordpress_test_cookie=[^;]+(; )?", "");
+
+    # Static content unique to the theme can be cached (so no user uploaded images)
+
+    # The reason I don't take the wp-content/uploads is because of cache size on bigger blogs
+
+    # that would fill up with all those files getting pushed into cache
+
+    if (req.url ~ "wp-content/themes/" && req.url ~ "\.(css|js|png|gif|jp(e)?g)") {
+
+        unset req.http.cookie;
+
+    }
+
+    # Even if no cookies are present, I don't want my "uploads" to be cached due to their potential size
+
+    if (req.url ~ "/wp-content/uploads/") {
+
+        return (pass);
+
+    }
+
+    # any pages with captchas need to be excluded
+
+    if (req.url ~ "^/contact/")
+
+    {
+
+        return(pass);
+
+    }
+
+    # Check the cookies for wordpress-specific items
+
+    if (req.http.Cookie ~ "wordpress_" || req.http.Cookie ~ "comment_") {
+
+        # A wordpress specific cookie has been set
+
+        return (pass);
+
+    }
+
+    # allow PURGE from localhost
+
+    if (req.method == "PURGE") {
+
+        if (!client.ip ~ purge) {
+
+            return(synth(405, "Not allowed."));
+
+        }
+
+        return (purge);
+
+    }
+
+    # Force lookup if the request is a no-cache request from the client
+
+    if (req.http.Cache-Control ~ "no-cache") {
+
+        return (pass);
+
+    }
+
+    # Try a cache-lookup
+
+    return (hash);
+
+}
+
+sub vcl_backend_response {
+
+    set beresp.grace = 5m;
+
+}
