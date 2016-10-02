@@ -1,9 +1,10 @@
-Set:
- - Varnish - latest stable
- - Nginx - latest stable
- - PHP-FPM - latest stable
- - MariaDB - latest stable
-To do:
+To Do:
  - Wordpress
  - FTP Server 
  - PHPMyAdmin 
+
+Completed:
+ - Varnish
+ - Nginx
+ - PHP-FPM
+ - MariaDB
