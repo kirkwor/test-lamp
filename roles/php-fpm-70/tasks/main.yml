@@ -14,10 +14,10 @@
     - php-mysql
 
 - name: Session folder
-  file: path=/var/lib/php/session state=directory owner=nginx group=nobody mode=770
+  file: path=/var/lib/php/session state=directory owner=nginx group=nginx mode=770
 
 - name: WDSL folder
-  file: path=/var/lib/php/wsdlcache state=directory owner=nginx group=nobody mode=770
+  file: path=/var/lib/php/wsdlcache state=directory owner=nginx group=nginx mode=770
 
 - name: Copy error.log
   copy: src=error.log dest=/var/log/php-fpm/error.log owner=nginx group=nginx mode=770

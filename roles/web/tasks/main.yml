@@ -1,0 +1,12 @@
+---
+- name: Install unzip
+  yum: name=unzip state=present
+
+- name: Get latest WP archive
+  get_url: dest=/tmp/WP.zip url=https://wordpress.org/latest.zip
+
+- name: Unzip the latest WP archive
+  unarchive: src=/tmp/WP.zip dest=/tmp/ copy=no owner=nginx group=nginx
+
+- name: Copy files from tmp to www
+  command: cp -Rp /tmp/wordpress /opt/www

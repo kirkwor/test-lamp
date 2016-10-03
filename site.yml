@@ -7,3 +7,5 @@
   - nginx
   - php-fpm-70
   - varnish
+  - ftp
+  - web

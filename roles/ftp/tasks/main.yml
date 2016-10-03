@@ -1,0 +1,10 @@
+---
+- name: Install vsftpd
+  yum: name=vsftpd state=present
+
+- name: Copy vsftpd default config
+  template: src=vsftpd.conf.j2 dest=/etc/vsftpd/vsftpd.conf
+
+- name: Set vsftpd to auto start
+  service: name=vsftpd state=started enabled=yes
+  notify: restart vsftpd
