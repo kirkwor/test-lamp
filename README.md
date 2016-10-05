@@ -19,6 +19,8 @@ Completed:
 
 Requirements note:
 
+Host should be using Centos 7.
+
 For phpmyadmin download I've issued a git command instead of the classic "get zip, unzip" method that I've used for Wordpress.
 
 This git method requries git version 1.9.1+ to use the "depth=1" option, this skips .git entire history to be downloaded i.e. use your disk space, if your git version is lower, then it will not fail (as it has a fallback method), but instead extra disk space will be used.
