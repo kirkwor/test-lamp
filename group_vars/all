@@ -7,3 +7,6 @@ mariadb_root_pass: "{{ lookup('password', '/tmp/mariadbpwd length=15') }}"
 
 # Default domain
 default_domain: test.com
+
+# Checksum for WP file
+checksum: 0f93b664af27f8909c748603c068a4b410b0337d

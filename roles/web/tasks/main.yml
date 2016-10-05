@@ -5,8 +5,8 @@
 - name: Get latest WP archive
   get_url: dest=/tmp/WP.zip url=https://wordpress.org/latest.zip
 
-- name: Unzip the latest WP archive
-  unarchive: src=/tmp/WP.zip dest=/tmp/ copy=no owner=nginx group=nginx
+- name: Unzip the latest WP archive only if /tmp/wordpress does not exist
+  unarchive: src=/tmp/WP.zip dest=/tmp/ copy=no owner=nginx group=nginx creates=/tmp/wordpress
 
 - name: Copy files from tmp to www
-  command: cp -Rp /tmp/wordpress /opt/www
+  command: cp -nRp /tmp/wordpress /opt/www

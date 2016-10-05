@@ -1,0 +1,12 @@
+---
+- name: Get latest phpmyadmin archive via git
+  git: repo=https://github.com/phpmyadmin/phpmyadmin.git dest=/opt/www_phpmyadmin version=STABLE depth=1
+
+- name: Copy phpmyadmin config with http auth
+  template: src=config.inc.php.j2 dest=/opt/www_phpmyadmin/config.inc.php
+
+- name: Copy phpmyadmin nginx config
+  template: src=pma.conf.j2 dest=/etc/nginx/conf.d/pma.conf
+
+- name: Change permissions
+  file: path=/opt/www_phpmyadmin owner=nginx group=nginx state=directory recurse=yes
