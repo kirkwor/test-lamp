@@ -7,6 +7,7 @@
 
 - name: Copy phpmyadmin nginx config
   template: src=pma.conf.j2 dest=/etc/nginx/conf.d/pma.conf
+  notify: restart nginx
 
 - name: Change permissions
   file: path=/opt/www_phpmyadmin owner=nginx group=nginx state=directory recurse=yes
