@@ -1,7 +1,6 @@
 ####
 
 To Do:
- - Custom FTP user
  - Restrict to sudo only
  - Custom config for cached results
 
@@ -14,6 +13,7 @@ Completed:
  - Wordpress initial
  - Links between services
  - phpMyAdmin
+ - Custom FTP user
 
 ####
 
@@ -21,8 +21,9 @@ Requirements note:
 
 Host should be using Centos 7.
 
-For phpmyadmin download I've issued a git command instead of the classic "get zip, unzip" method that I've used for Wordpress.
+Package python-passlib should be present on the host running ansible-playbook.
 
+For phpmyadmin download, I've issued a git command instead of the classic "get zip, unzip" method that I've used for Wordpress.
 This git method requries git version 1.9.1+ to use the "depth=1" option, this skips .git entire history to be downloaded i.e. use your disk space, if your git version is lower, then it will not fail (as it has a fallback method), but instead extra disk space will be used.
 
 Your PC hosts file alteration for both WP and phpmyadmin URL should look like (if your server IP is 10.10.0.5):

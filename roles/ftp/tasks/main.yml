@@ -4,7 +4,11 @@
 
 - name: Copy vsftpd default config
   template: src=vsftpd.conf.j2 dest=/etc/vsftpd/vsftpd.conf
+  notify: restart vsftpd
 
 - name: Set vsftpd to auto start
   service: name=vsftpd state=started enabled=yes
-  notify: restart vsftpd
+
+- name: Add FTP username
+  user: name=web home=/opt/www createhome=no state=present update_password=on_create shell=/sbin/nologin password={{ item }}
+  with_password: "/tmp/ftppwd encrypt=sha256_crypt"

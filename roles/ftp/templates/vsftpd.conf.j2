@@ -97,7 +97,7 @@ xferlog_std_format=YES
 # (Warning! chroot'ing can be very dangerous. If using chroot, make sure that
 # the user does not have write access to the top level directory within the
 # chroot)
-#chroot_local_user=YES
+chroot_local_user=YES
 #chroot_list_enable=YES
 # (default follows)
 #chroot_list_file=/etc/vsftpd/chroot_list
@@ -126,3 +126,7 @@ pam_service_name=vsftpd
 userlist_enable=YES
 tcp_wrappers=YES
 force_dot_files=YES
+pasv_enable=Yes
+pasv_max_port=14000
+pasv_min_port=15000
+allow_writeable_chroot=YES

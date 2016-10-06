@@ -8,10 +8,10 @@
 - name: Create the GPG key for EPEL
   copy: src=RPM-GPG-KEY-EPEL-7 dest=/etc/pki/rpm-gpg
 
-- name: get epel-repo rpm RHEL7
+- name: Get epel-repo rpm RHEL7
   get_url: dest=/tmp/epel-release.rpm  url=https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
 
-- name: get remi-repo rpm RHEL7
+- name: Get remi-repo rpm RHEL7
   get_url: dest=/tmp/remi-release.rpm  url=http://rpms.famillecollet.com/enterprise/remi-release-7.rpm
 
 - name: Install epel-repo

@@ -20,14 +20,14 @@
   file: path=/var/lib/php/wsdlcache state=directory owner=nginx group=nginx mode=770
 
 - name: Copy error.log
-  copy: src=error.log dest=/var/log/php-fpm/error.log owner=nginx group=nginx mode=770
+  copy: src=error.log dest=/var/log/php-fpm/error.log owner=nginx group=nginx mode=770 force=no
 
 - name: Copy slow.log
-  copy: src=slow.log dest=/var/log/php-fpm/slow.log owner=nginx group=nginx mode=770
+  copy: src=slow.log dest=/var/log/php-fpm/slow.log owner=nginx group=nginx mode=770 force=no
 
 - name: Copy www.conf
   template: src=www.conf dest=/etc/php-fpm.d/www.conf
+  notify: restart php-fpm
 
 - name: Add php-fpm to auto start
   command: /usr/bin/systemctl enable php-fpm
-  notify: restart php-fpm
